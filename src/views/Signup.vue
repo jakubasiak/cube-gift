@@ -79,6 +79,10 @@
         </ul>
       </div>
 
+      <div v-if="this.feedback" class="helper-text red-text text-darken-2">
+        <p>{{this.feedback}}</p>
+      </div>
+
       <div class="field center">
         <button class="btn blue" :disabled="$v.$invalid && $v.$anyDirty">Signup</button>
       </div>
@@ -88,6 +92,9 @@
 
 <script>
 import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
+import { db } from '@/firebase/init'
+import firebase from 'firebase'
+
 export default {
   name: "Signup",
   data() {
@@ -96,6 +103,7 @@ export default {
       email: null,
       password: null,
       confirmPassword: null,
+      feedback: null
     };
   },
   validations: {
@@ -116,7 +124,27 @@ export default {
   },
   methods: {
     signup() {
-      console.log(this.$data);
+      this.feedback = null;
+      if(this.email && this.password)
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+      .then(cred => {
+        cred.user.updateProfile({
+          displayName: this.username
+        })
+        db.ref('users/' + cred.user.uid).set({
+          username: this.username,
+          email: this.email,
+          user_id: cred.user.uid
+        })
+      })
+      .then(() => {
+        this.$router.push({ name: 'Home' })
+      })
+      .catch(err => {
+        console.log(err)
+        this.feedback = err.message
+      })
+
     },
   },
 };

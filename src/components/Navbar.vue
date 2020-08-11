@@ -4,13 +4,13 @@
       <a href="#" class="brand-logo">Gift</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li>
-          <a href="sass.html">Sass</a>
+          <router-link :to="{name: 'Signup'}">Signup</router-link>
         </li>
         <li>
-          <a href="badges.html">Components</a>
+          <a href="">Login</a>
         </li>
         <li>
-          <a href="collapsible.html">JavaScript</a>
+          <a @click="logout">Logout</a>
         </li>
       </ul>
     </div>
@@ -18,12 +18,22 @@
 </template>
 
 <script>
+import firebase from 'firebase'
+
 export default {
   name: "Navbar",
   data() {
     return {};
+  },
+  methods: {
+    logout() {
+      firebase.auth().signOut()
+      .then(() => {
+        this.$router.push({name: 'Signup'});
+      })
+    }
   }
-};
+}
 </script>
 
 <style>
