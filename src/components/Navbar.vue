@@ -1,15 +1,18 @@
 <template>
   <nav class="transparent">
     <div class="nav-wrapper container">
-      <a href="#" class="brand-logo">Gift</a>
+      <router-link :to="{ name: 'Home'}" class="brand-logo">GIFT</router-link>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li>
+        <li v-if="!this.user">
           <router-link :to="{name: 'Signup'}">Signup</router-link>
         </li>
-        <li>
-          <a href="">Login</a>
+        <li v-if="!this.user">
+          <router-link :to="{name: 'Login'}">Login</router-link>
         </li>
-        <li>
+        <li v-if="this.user">
+          <a>{{this.user.email}}</a>
+        </li>
+        <li v-if="this.user">
           <a @click="logout">Logout</a>
         </li>
       </ul>
@@ -23,15 +26,26 @@ import firebase from 'firebase'
 export default {
   name: "Navbar",
   data() {
-    return {};
+    return {
+      user: null
+    };
   },
   methods: {
     logout() {
       firebase.auth().signOut()
       .then(() => {
-        this.$router.push({name: 'Signup'});
+        this.$router.push({name: 'Login'});
       })
     }
+  },
+  created() {
+    firebase.auth().onAuthStateChanged(user => {
+      if(user) {
+        this.user = user;
+      } else {
+        this.user = null;
+      }
+    })
   }
 }
 </script>

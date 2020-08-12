@@ -26,6 +26,10 @@ html {
     rgba(3, 70, 148, 1) 45%,
     rgba(0, 116, 255, 1) 100%
   );
+  background-repeat: no-repeat;
+  background-position: top left;
+  background-attachment: fixed;
+  width: 100%;
   height: 100%;
   width: 100%;
 }
