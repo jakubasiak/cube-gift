@@ -15,7 +15,7 @@ let app = null;
 firebase.auth().onAuthStateChanged(() => {
 
   // init app if not already created
-  if(!app) {
+  if (!app) {
     app = new Vue({
       router,
       render: h => h(App)
