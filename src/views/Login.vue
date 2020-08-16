@@ -1,5 +1,5 @@
 <template>
-  <div class="signup container">
+  <div class="login container">
     <form @submit.prevent="login" class="card-panel grey lighten-5 blue-text text-darken-4">
       <h2 class="center">Login</h2>
 
@@ -96,20 +96,20 @@ export default {
 </script>
 
 <style scoped>
-.signup {
+.login {
   max-width: 800px;
-  margin-top: 5%;
+  margin-top: 50px;
 }
 
-.signup h2 {
+.login h2 {
   font-size: 2.4em;
 }
 
-.signup .field {
+.login .field {
   margin-bottom: 0.5em;
 }
 
-.signup .validation-text {
+.login .validation-text {
   margin-left: 0.5em;
 }
 </style>

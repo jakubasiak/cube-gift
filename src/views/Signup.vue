@@ -153,7 +153,7 @@ export default {
 <style scoped>
 .signup {
   max-width: 800px;
-  margin-top: 5%;
+  margin-top: 50px;
 }
 
 .signup h2 {

@@ -10,6 +10,17 @@
           <router-link :to="{name: 'Login'}">Login</router-link>
         </li>
         <li v-if="this.user">
+          <router-link :to="{name: 'NewProject'}" class="btn blue">
+            New project<i class="material-icons right">add</i>
+          </router-link>
+        </li>
+        <li v-if="this.user">
+          <router-link :to="{name: 'ProjectList'}">Project list</router-link>
+        </li>
+        <li v-if="this.user" style="margin-right: 5em;">
+          <router-link :to="{name: 'WishList'}">Wish list</router-link>
+        </li>
+        <li v-if="this.user">
           <a>{{this.user.email}}</a>
         </li>
         <li v-if="this.user">

@@ -3,6 +3,9 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Signup from "@/views/Signup.vue";
 import Login from "@/views/Login.vue";
+import ProjectList from "@/views/ProjectList.vue";
+import WishList from "@/views/WishList.vue";
+import NewProject from "@/views/NewProject.vue";
 
 Vue.use(VueRouter)
 
@@ -21,6 +24,21 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+  },
+  {
+    path: "/project-list",
+    name: "ProjectList",
+    component: ProjectList,
+  },
+  {
+    path: "/wish-list",
+    name: "WishList",
+    component: WishList,
+  },
+  {
+    path: "/new-project",
+    name: "NewProject",
+    component: NewProject,
   },
   {
     path: '/about',
