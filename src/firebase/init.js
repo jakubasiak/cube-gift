@@ -1,20 +1,19 @@
-import firebase from 'firebase';
-
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 // Your web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: 'AIzaSyDInpiNhNRv2LKlyiiOjCbvpzpK7qMZQXs',
-    authDomain: 'cube-gift.firebaseapp.com',
-    databaseURL: 'https://cube-gift.firebaseio.com',
-    projectId: 'cube-gift',
-    storageBucket: 'cube-gift.appspot.com',
-    messagingSenderId: '991063651180',
-    appId: '1:991063651180:web:e4538319e4cb5396693949',
-    measurementId: 'G-ZNZ9C649FD',
+var firebaseConfig = {
+    apiKey: "AIzaSyAYsszgA8F4QtBzgyVMTZJln6b3GF51k-I",
+    authDomain: "gift-1efbb.firebaseapp.com",
+    databaseURL: "https://gift-1efbb.firebaseio.com",
+    projectId: "gift-1efbb",
+    storageBucket: "gift-1efbb.appspot.com",
+    messagingSenderId: "756174337496",
+    appId: "1:756174337496:web:c90f3aea10e5d168f66ead"
 };
+
 // Initialize Firebase
 const firebaseApp = firebase.initializeApp(firebaseConfig);
-firebase.analytics();
+// firebase.analytics();
 
-export const db = firebase.database();
-
+export const db = firebase.firestore();
 export default firebaseApp.firestore();

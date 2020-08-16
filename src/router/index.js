@@ -1,6 +1,7 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import firebase from 'firebase';
+import Home from '../views/Home.vue';
 import Signup from "@/views/Signup.vue";
 import Login from "@/views/Login.vue";
 import ProjectList from "@/views/ProjectList.vue";
@@ -29,16 +30,25 @@ const routes = [
     path: "/project-list",
     name: "ProjectList",
     component: ProjectList,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/wish-list",
     name: "WishList",
     component: WishList,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/new-project",
     name: "NewProject",
     component: NewProject,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/about',
@@ -52,6 +62,23 @@ const routes = [
 
 const router = new VueRouter({
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  // check to see if routs requires auth
+  if (to.matched.some(rec => rec.meta.requiresAuth)) {
+    // check auth state of user
+    let user = firebase.auth().currentUser;
+    if (user) {
+      // user signed in, proceed to route
+      next();
+    } else {
+      // no user signed in, redirect to login
+      next({ name: 'Login' });
+    }
+  } else {
+    next();
+  }
 })
 
 export default router

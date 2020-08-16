@@ -92,8 +92,9 @@
 
 <script>
 import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
-import { db } from '@/firebase/init'
-import firebase from 'firebase'
+import { db } from "@/firebase/init";
+import firebase from "firebase";
+import "firebase/firestore";
 
 export default {
   name: "Signup",
@@ -103,7 +104,7 @@ export default {
       email: null,
       password: null,
       confirmPassword: null,
-      feedback: null
+      feedback: null,
     };
   },
   validations: {
@@ -125,26 +126,27 @@ export default {
   methods: {
     signup() {
       this.feedback = null;
-      if(this.email && this.password)
-      firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-      .then(cred => {
-        cred.user.updateProfile({
-          displayName: this.username
-        })
-        db.ref('users/' + cred.user.uid).set({
-          username: this.username,
-          email: this.email,
-          user_id: cred.user.uid
-        })
-      })
-      .then(() => {
-        this.$router.push({ name: 'Home' })
-      })
-      .catch(err => {
-        console.log(err)
-        this.feedback = err.message
-      })
-
+      if (this.email && this.password)
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(this.email, this.password)
+          .then((cred) => {
+            cred.user.updateProfile({
+              displayName: this.username,
+            });
+            db.collection("users").add({
+              username: this.username,
+              email: this.email,
+              uid: cred.user.uid,
+            });
+          })
+          .then(() => {
+            this.$router.push({ name: "Home" });
+          })
+          .catch((err) => {
+            console.log(err);
+            this.feedback = err.message;
+          });
     },
   },
 };
