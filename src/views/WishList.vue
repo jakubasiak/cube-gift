@@ -57,26 +57,24 @@
       </div>
     </form>
 
-    <div class="card-panel grey lighten-5 blue-text text-darken-4">
-      <div
-        v-for="(item, index) in wishList"
-        :key="index"
-        class="collection-item blue-text text-darken-4 card-panel"
-      >
-        <div class="flex-container">
-          <div>
-            <label>Name</label>
-            <div>{{item.name}}</div>
-            <label>Description</label>
-            <div>{{item.description}}</div>
-            <label>Link</label>
-            <div>{{item.link}}</div>
-            <label>Price</label>
-            <div>{{item.price}}</div>
-          </div>
-          <div>
-            <button class="btn blue" @click="reset">Remove</button>
-          </div>
+    <div
+      v-for="item in wishList"
+      :key="item.id"
+      class="collection-item blue-text text-darken-4 card-panel"
+    >
+      <div class="flex-container">
+        <div>
+          <label>Name</label>
+          <div>{{item.name}}</div>
+          <label>Description</label>
+          <div>{{item.description}}</div>
+          <label>Link</label>
+          <div>{{item.link}}</div>
+          <label>Price</label>
+          <div>{{item.price}}</div>
+        </div>
+        <div>
+          <button class="btn blue" @click="remove(item.id)">Remove</button>
         </div>
       </div>
     </div>
@@ -129,7 +127,6 @@ export default {
           .then((docRef) => {
             this.reset();
             this.wishList.unshift({ ...gift, id: docRef.id });
-            console.log(this.wishList);
           })
           .catch((err) => {
             console.log(err);
@@ -142,6 +139,19 @@ export default {
       this.description = null;
       this.link = null;
       this.price = null;
+      this.$v.$reset();
+    },
+    remove(id) {
+      db.collection("gifts")
+        .doc(id)
+        .delete()
+        .then(() => {
+          this.wishList = this.wishList.filter((x) => x.id != id);
+        })
+        .catch((err) => {
+          console.log(err);
+          this.feedback = err.message;
+        });
     },
   },
   created() {
