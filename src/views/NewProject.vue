@@ -38,21 +38,37 @@
       </div>
 
       <div class="field">
-        <label for="autocomplete-input">Participant</label>
+        <label for="participant">Participant</label>
         <input
           type="text"
           name="participant"
-          class="autocomplete"
+          ref="participantField"
           v-model="participant"
-          @input="updateOptions($event)"
+          @input="searchUser($event)"
         />
-        <ul class="helper-text red-text text-darken-2">
-          <li class="valign-wrapper" v-if="!$v.title.required && $v.title.$dirty">
-            <i class="tiny material-icons">error</i>
-            <span class="validation-text">Field is required</span>
-          </li>
-        </ul>
       </div>
+
+      <div class="flex-container">
+        <button
+          v-for="user in participantsSearchResult"
+          :key="user.uid"
+          class="btn blue"
+          @click="addParticipant(user)"
+        >{{user.username}}</button>
+      </div>
+
+      <ul v-if="participants.length > 0" class="collection">
+        <li
+          v-for="participant in participants"
+          :key="participant.uid"
+          class="collection-item blue-text text-darken-4"
+        >
+          <div class="flex-container-between">
+            <span>{{participant.username}}</span>
+            <button class="btn blue" @click="removeParticipant(participant)">Remove</button>
+          </div>
+        </li>
+      </ul>
 
       <div v-if="this.feedback" class="helper-text red-text text-darken-2">
         <p>{{this.feedback}}</p>
@@ -77,12 +93,9 @@ export default {
       title: null,
       description: null,
       participants: [],
+      participantsSearchResult: [],
       participant: null,
       feedback: null,
-      options: [
-        { id: 1, name: "abc" },
-        { id: 2, name: "def" },
-      ],
     };
   },
   validations: {
@@ -94,18 +107,50 @@ export default {
     },
   },
   methods: {
-    create() {},
-    updateOptions(event) {
+    create() {
+      if (!this.title || !this.description || this.participants.length === 0) {
+        this.feedback = "You have to fill the form first";
+      } else {
+        this.feedback = null;
+        db.collection("projects")
+          .add({
+            title: this.title,
+            description: this.description,
+            participants: this.participants.map((p) => p.uid),
+          })
+          .then((docRef) => {
+            this.$router.push("/");
+          })
+          .catch((err) => {
+            console.log(err);
+            this.feedback = err.message;
+          });
+      }
+    },
+    addParticipant(user) {
+      this.participants.push(user);
+      this.participantsSearchResult = [];
+      this.participant = null;
+      this.$refs.participantField.focus();
+    },
+    removeParticipant(user) {
+      this.participants = this.participants.filter((u) => u.uid !== user.uid);
+    },
+    searchUser(event) {
       if (this.participant.length > 0) {
         db.collection("users")
           .where("username", ">=", this.participant)
+          .limit(5)
           .get()
           .then((querySnapshot) => {
-            this.participants = [];
+            this.participantsSearchResult = [];
             querySnapshot.forEach((doc) => {
-              this.participants.push({ ...doc.data() });
+              this.participantsSearchResult.push({ ...doc.data() });
             });
-            console.log(this.participants);
+            this.participantsSearchResult = this.participantsSearchResult.filter(
+              (x) =>
+                this.participants.filter((p) => p.uid === x.uid).length === 0
+            );
           })
           .catch((err) => {
             console.log(err);
@@ -134,5 +179,25 @@ export default {
 
 .new-project .validation-text {
   margin-left: 0.5em;
+}
+
+.new-project .flex-container {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.new-project .flex-container-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn {
+  margin: 2px;
+}
+
+.collection {
+  margin-top: 15px;
 }
 </style>
