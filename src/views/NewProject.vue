@@ -85,6 +85,7 @@
 import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 import { db } from "@/firebase/init";
 import firebase from "firebase";
+import moment from "moment";
 
 export default {
   name: "NewProject",
@@ -96,6 +97,7 @@ export default {
       participantsSearchResult: [],
       participant: null,
       feedback: null,
+      creator: null,
     };
   },
   validations: {
@@ -116,7 +118,12 @@ export default {
           .add({
             title: this.title,
             description: this.description,
-            participants: this.participants.map((p) => p.uid),
+            participants: [
+              ...this.participants.map((p) => p.uid),
+              this.creator.uid,
+            ],
+            creator: this.creator.uid,
+            creationDate: moment().toISOString(),
           })
           .then((docRef) => {
             this.$router.push("/");
@@ -149,7 +156,8 @@ export default {
             });
             this.participantsSearchResult = this.participantsSearchResult.filter(
               (x) =>
-                this.participants.filter((p) => p.uid === x.uid).length === 0
+                this.participants.filter((p) => p.uid === x.uid).length <= 0 &&
+                x.uid !== this.creator.uid
             );
           })
           .catch((err) => {
@@ -159,7 +167,9 @@ export default {
       }
     },
   },
-  created() {},
+  created() {
+    this.creator = firebase.auth().currentUser;
+  },
 };
 </script>
 

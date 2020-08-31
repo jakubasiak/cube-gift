@@ -55,29 +55,27 @@
         <button type="submite" class="btn blue" :disabled="$v.$invalid && $v.$anyDirty">Add to list</button>
         <button class="btn blue" @click="reset">Reset</button>
       </div>
-    </form>
 
-    <div
-      v-for="item in wishList"
-      :key="item.id"
-      class="collection-item blue-text text-darken-4 card-panel"
-    >
-      <div class="flex-container">
-        <div>
-          <label>Name</label>
-          <div>{{item.name}}</div>
-          <label>Description</label>
-          <div>{{item.description}}</div>
-          <label>Link</label>
-          <div>{{item.link}}</div>
-          <label>Price</label>
-          <div>{{item.price}}</div>
-        </div>
-        <div>
-          <button class="btn blue" @click="remove(item.id)">Remove</button>
-        </div>
-      </div>
-    </div>
+      <ul class="collection list">
+        <li v-for="item in wishList" :key="item.id" class="collection-item blue-text text-darken-4">
+          <div class="flex-container">
+            <div>
+              <label>Name</label>
+              <div>{{item.name}}</div>
+              <label>Description</label>
+              <div>{{item.description}}</div>
+              <label>Link</label>
+              <div>{{item.link}}</div>
+              <label>Price</label>
+              <div>{{item.price}}</div>
+            </div>
+            <div>
+              <button class="btn blue" @click="remove(item.id)">Remove</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </form>
   </div>
 </template>
 
@@ -199,5 +197,9 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.list {
+  margin-top: 15px;
 }
 </style>

@@ -11,7 +11,8 @@
         </li>
         <li v-if="this.user">
           <router-link :to="{name: 'NewProject'}" class="btn blue">
-            New project<i class="material-icons right">add</i>
+            New project
+            <i class="material-icons right">add</i>
           </router-link>
         </li>
         <li v-if="this.user">
@@ -32,33 +33,35 @@
 </template>
 
 <script>
-import firebase from 'firebase'
+import firebase from "firebase";
 
 export default {
   name: "Navbar",
   data() {
     return {
-      user: null
+      user: null,
     };
   },
   methods: {
     logout() {
-      firebase.auth().signOut()
-      .then(() => {
-        this.$router.push({name: 'Login'});
-      })
-    }
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.push({ name: "Login" });
+        });
+    },
   },
   created() {
-    firebase.auth().onAuthStateChanged(user => {
-      if(user) {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
         this.user = user;
       } else {
         this.user = null;
       }
-    })
-  }
-}
+    });
+  },
+};
 </script>
 
 <style>
